@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from database import engine, Base, get_db
 import models, schemas, crud
@@ -7,6 +8,21 @@ import models, schemas, crud
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+# Allow all origins to make requests
+origins = [
+    "http://localhost:8080",  # Vue.js frontend running on this port
+    "http://127.0.0.1:8080",
+]
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Allow only the specified origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
 
 # Event Routes
 @app.post("/events/", response_model=schemas.EventResponse)
