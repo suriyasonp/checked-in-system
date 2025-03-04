@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Optional
 
 # Event Schemas
+
 class EventCreate(BaseModel):
     name: str
     description: Optional[str] = None
@@ -42,11 +43,22 @@ class CheckInCreate(BaseModel):
     audience_id: int
     event_id: int
 
+class EventBase(BaseModel):
+    name: str
+    description: Optional[str]
+    location: Optional[str]
+
+class AudienceBase(BaseModel):
+    full_name_th: str
+    full_name_en: Optional[str]
+    organization: Optional[str]
+    faculty: Optional[str]
+    department: Optional[str]
+
 class CheckInResponse(BaseModel):
-    id: int
-    audience_id: int
-    event_id: int
     check_in_time: datetime
+    event: EventBase
+    audience: AudienceBase
 
     class Config:
         orm_mode = True

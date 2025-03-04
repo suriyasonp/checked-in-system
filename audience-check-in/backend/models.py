@@ -41,3 +41,6 @@ class CheckIn(Base):
     # Relationships
     audience = relationship("Audience", backref="checkins")
     event = relationship("Events", backref="checkins")
+
+    class Config:
+        orm_mode = True
