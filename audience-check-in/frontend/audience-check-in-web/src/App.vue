@@ -16,7 +16,7 @@
 
       <q-footer bordered class="bg-grey-3 text-primary">
         <q-tabs no-caps active-color="primary" indicator-color="transparent" class="text-grey-8" v-model="tab">
-          <q-tab name="Audiences" label="Audiences" :to="`/audiences/${selectedEvent}`"/>
+          <q-tab name="Audiences" label="Audiences"/>
           <q-tab name="Check-in" label="Check-in" />
           <q-tab name="About me" label="About me" />
         </q-tabs>
