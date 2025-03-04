@@ -16,7 +16,7 @@
 
       <q-footer bordered class="bg-grey-3 text-primary">
         <q-tabs no-caps active-color="primary" indicator-color="transparent" class="text-grey-8" v-model="tab">
-          <q-tab name="Audiences" label="Audiences" />
+          <q-tab name="Audiences" label="Audiences" :to="`/audiences/${selectedEvent}`"/>
           <q-tab name="Check-in" label="Check-in" />
           <q-tab name="About me" label="About me" />
         </q-tabs>
@@ -84,7 +84,10 @@ export default defineComponent({
     const columns = [
       { name: 'order', label: '#', align: 'center', field: 'order' },
       { name: 'full_name_th', label: 'Name', align: 'left', field: 'full_name_th' },
+      { name: 'nickname_th', label: 'Nickname', align: 'left', field: 'nick_name_th' },
       { name: 'full_name_en', label: 'Name English', align: 'left', field: 'full_name_en' },
+      { name: 'nickname_en', label: 'Nickname English', align: 'left', field: 'nick_name_en' },
+      { name: 'organization', label: 'Organization', align: 'left', field: 'organization' },
       { name: 'check_in_time', label: 'Check-in Time', align: 'center', field: 'check_in_time' },
     ];
 
@@ -114,6 +117,9 @@ export default defineComponent({
           ...checkin,
           full_name_th: checkin.audience.full_name_th,
           full_name_en: checkin.audience.full_name_en,
+          nick_name_th: checkin.audience.nick_name_th,
+          nick_name_en: checkin.audience.nick_name_en,
+          organization: checkin.audience.organization,
           check_in_time: new Date(checkin.check_in_time).toLocaleString()
         }));
         errorMessage.value = null; // Clear any previous error

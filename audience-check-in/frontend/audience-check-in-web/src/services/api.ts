@@ -23,3 +23,13 @@ export const getCheckins = async (eventId: number) => {
         throw error;
     }
 };
+
+export const getAudienceByEvent = async (eventId: number) => {
+    try {
+        const response = await axios.get(`${API_URL}/audience/event/${eventId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching audience by event", error);
+        throw error;
+    }
+};

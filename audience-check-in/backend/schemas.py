@@ -51,6 +51,8 @@ class EventBase(BaseModel):
 class AudienceBase(BaseModel):
     full_name_th: str
     full_name_en: Optional[str]
+    nick_name_th: Optional[str]
+    nick_name_en: Optional[str]
     organization: Optional[str]
     faculty: Optional[str]
     department: Optional[str]
