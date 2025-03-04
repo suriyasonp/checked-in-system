@@ -52,6 +52,6 @@ def check_in_user(checkin: schemas.CheckInCreate, db: Session = Depends(get_db))
     
     return result
 
-@app.get("/checkins/", response_model=list[schemas.CheckInResponse])
-def get_checkins(db: Session = Depends(get_db)):
-    return crud.get_checkins(db)
+@app.get("/checkin/event/{event_id}", response_model=list[schemas.CheckInResponse])
+def get_checkins_by_event_id(event_id: int, db: Session = Depends(get_db)):
+    return crud.get_checkins_by_event_id(db, event_id)

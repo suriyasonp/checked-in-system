@@ -45,5 +45,5 @@ def create_checkin(db: Session, checkin: schemas.CheckInCreate):
     db.refresh(db_checkin)
     return db_checkin
 
-def get_checkins(db: Session):
-    return db.query(models.CheckIn).order_by(models.CheckIn.check_in_time).all()
+def get_checkins_by_event_id(db: Session, event_id: int):
+    return db.query(models.CheckIn).filter(models.CheckIn.event_id == event_id).order_by(models.CheckIn.check_in_time.asc()).all()
