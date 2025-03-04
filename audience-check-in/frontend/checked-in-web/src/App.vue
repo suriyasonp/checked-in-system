@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div>
+      <q-btn label="Click Me" color="primary" @click="handleClick" />
       <label for="event-select">Select Event: </label>
       <select v-model="selectedEventId" @change="fetchCheckins">
         <option v-for="event in events" :key="event.id" :value="event.id">
@@ -46,6 +47,10 @@ export default defineComponent({
     };
   },
   methods: {
+    handleClick() {
+      alert("Quasar Button Clicked!");
+    },
+
     async fetchEventsData() {
       try {
         this.events = await getEvents();
