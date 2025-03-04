@@ -1,4 +1,4 @@
-# checked-in-frontend
+# checked-in-web
 
 ## Project setup
 ```
