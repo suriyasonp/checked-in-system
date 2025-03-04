@@ -11,8 +11,8 @@ app = FastAPI()
 
 # Allow all origins to make requests
 origins = [
-    "http://localhost:8080",  # Vue.js frontend running on this port
-    "http://127.0.0.1:8080",
+    "http://localhost:9000",  # Vue.js frontend running on this port
+    "http://127.0.0.1:9000",
 ]
 
 # Add CORS middleware
