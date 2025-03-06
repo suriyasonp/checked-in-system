@@ -3,13 +3,10 @@
     <q-layout view="lHh lpr lFf" container style="height: 400px" class="shadow-2 rounded-borders">
       <q-header bordered class="bg-grey-3 text-primary">
         <q-toolbar>
-
           <q-avatar>
             <img src="../assets/target.png">
           </q-avatar>
-
           <q-toolbar-title class="text-center text-dark">Audience check-in system</q-toolbar-title>
-
           <q-btn flat round dense icon="event" />
         </q-toolbar>
       </q-header>
@@ -20,26 +17,9 @@
           <q-tab name="Audiences" label="Audiences" @click="goToAudiences" />
           <q-tab name="Check-in" label="Check-in" @click="goToCheckIn" />
           <q-tab name="About me" label="About me" />
-
         </q-tabs>
       </q-footer>
 
-      <!-- <q-page-container>
-        <q-page>
-          <q-select filled v-model="selectedEvent" :options="events" label="Select Event" emit-value map-options
-            @input="fetchCheckins" />
-          <q-table :rows="checkins" :columns="columns" row-key="id" :loading="loading"
-            no-data-label="No check-ins available">
-            <template v-slot:top-right>
-              <q-btn color="primary" label="Refresh" @click="fetchCheckins" :disable="!selectedEvent" icon="refresh" />
-            </template>
-</q-table>
-<q-banner v-if="errorMessage" class="bg-negative text-white">
-  <q-icon name="error" size="xs" />
-  {{ errorMessage }}
-</q-banner>
-</q-page>
-</q-page-container> -->
       <q-page-container>
         <router-view />
       </q-page-container>
