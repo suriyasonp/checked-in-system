@@ -38,7 +38,7 @@
             </div>
             <div class="row q-mb-md">
                 <div class="col q-mr-md">
-                    <q-input v-model="form.year_grade" label="Year Grade" type="number" filled />
+                    <q-input v-model="form.year_grade" label="Year Grade" filled />
                 </div>
                 <div class="col">
                     <q-input v-model="form.faculty" label="Faculty" filled />
@@ -49,23 +49,28 @@
                     <q-input v-model="form.department" label="Department" filled />
                 </div>
                 <div class="col">
-                    <q-input v-model="form.event_id" label="Event ID" type="number" filled />
+                    <q-select filled v-model="form.event_id" :options="events" label="Select Event" emit-value
+                        map-options />
                 </div>
             </div>
             <div class="q-mt-md row justify-end">
-                <q-btn label="Cancel" type="submit" color="grey" class="q-mr-sm btn" />
-                <q-btn label="Save" type="reset" color="primary" class="btn" />
+                <q-btn label="Cancel" type="reset" color="grey" class="q-mr-sm btn" reset />
+                <q-btn label="Save" type="submit" color="primary" class="btn" />
             </div>
         </q-form>
     </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
+import { registerAudience, getEvents } from '../services/api';
 
 export default defineComponent({
     name: 'RegisterPage',
     setup() {
+        const events = ref<any[]>([]);
+        const errorMessage = ref<string | null>(null);
+
         const form = ref({
             full_name_th: '',
             full_name_en: '',
@@ -78,12 +83,28 @@ export default defineComponent({
             year_grade: 0,
             faculty: '',
             department: '',
-            event_id: 0,
+            event_id: [],
         });
+        const fetchEvents = async () => {
+            try {
+                const data = await getEvents();
+                events.value = data.map((event: any) => ({
+                    label: event.name,
+                    value: event.id
+                }));
+            } catch (error) {
+                console.error('Error fetching events', error);
+                errorMessage.value = 'Failed to load events. Please try again later.';
+            }
+        };
 
-        const onSubmit = () => {
-            console.log('Form submitted:', form.value);
-            // Add your form submission logic here
+        const onSubmit = async () => {
+            try {
+                const response = await registerAudience(form.value);
+                console.log('Form submitted:', response);
+            } catch (error) {
+                console.error('Error submitting form:', error);
+            }
         };
 
         const onReset = () => {
@@ -99,11 +120,16 @@ export default defineComponent({
                 year_grade: 0,
                 faculty: '',
                 department: '',
-                event_id: 0,
+                event_id: [],
             };
         };
 
+        onMounted(() => {
+            fetchEvents();
+        });
+
         return {
+            events,
             form,
             onSubmit,
             onReset,

@@ -1,6 +1,9 @@
 <template>
     <div>
         <q-page>
+            <div class="q-pb-md q-pt-md q-pl-md" style="  font-size: 24px;">
+                <b>Check-in</b>
+            </div>
             <q-select filled v-model="selectedEvent" :options="events" label="Select Event" emit-value map-options
                 @input="fetchCheckins" />
             <q-table :rows="checkins" :columns="columns" row-key="id" :loading="loading"

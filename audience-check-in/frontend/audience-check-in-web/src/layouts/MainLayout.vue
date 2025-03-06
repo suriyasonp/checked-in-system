@@ -1,5 +1,5 @@
 <template>
-  <div id="app" >
+  <div id="app">
     <q-layout view="lHh lpr lFf" container style="min-height: 100vh; height: auto;" class="shadow-2 rounded-borders">
 
       <q-header bordered class="bg-grey-3 text-primary">
@@ -14,9 +14,8 @@
 
       <q-footer bordered class="bg-grey-3 text-primary">
         <q-tabs no-caps active-color="primary" indicator-color="transparent" class="text-grey-8" v-model="tab">
-          <q-tab name="Home" label="Home" @click="goToHome" />
+          <q-tab name="Check-in" label="Check-in" @click="goToHome" />
           <q-tab name="Audiences" label="Audiences" @click="goToAudiences" />
-          <q-tab name="Check-in" label="Check-in" />
           <q-tab name="Register" label="Register" @click="goToRegister" />
         </q-tabs>
       </q-footer>

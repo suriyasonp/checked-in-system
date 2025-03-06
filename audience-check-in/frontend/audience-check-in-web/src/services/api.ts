@@ -44,3 +44,14 @@ export const getAudiences = async (eventId: number) => {
     throw error;
   }
 };
+
+//Post Register Audience
+export const registerAudience = async (form: any) => {
+  try {
+    const response = await axios.post(`${API_URL}/audience`, form); // ส่งข้อมูลฟอร์มใน body
+    return response.data;
+  } catch (error) {
+    console.error('Error registering audience', error);
+    throw error;
+  }
+};
