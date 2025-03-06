@@ -41,7 +41,7 @@ export default defineComponent({
     const loading = ref<boolean>(false);
     const errorMessage = ref<string | null>(null);
 
-    const tab = ref<string>("Check-in");
+    const tab = ref<string>("Home");
 
     const columns = [
       { name: 'order', label: '#', align: 'center', field: 'order' },
