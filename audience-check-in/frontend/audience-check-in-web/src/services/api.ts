@@ -24,7 +24,7 @@ export const getCheckins = async (eventId: number) => {
   }
 };
 
-export const getAudienceByEvent = async (eventId: number) => {
+export const getAudienceByEvent = async (eventId: number|null) => {
   try {
     const response = await axios.get(`${API_URL}/audience/event/${eventId}`);
     return response.data;

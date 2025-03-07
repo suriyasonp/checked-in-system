@@ -102,12 +102,15 @@ export default defineComponent({
                 filteredAudienceList.value = tAudienceList.value.filter(audience =>
                     audience.full_name_th.toLowerCase().includes(checkInData.value.toLowerCase())
                 );
-            } else {
+            } else if (checkInData.value === '') {
+                getAudienceByEvent(selectedCheckInEvent.value);
                 filteredAudienceList.value = tAudienceList.value;
+                errorMessageOnDialog.value = null;
             }
         };
+
         watch(checkInData, (newValue) => {
-            if (newValue) {
+            if (newValue !== undefined) {
                 filterAudienceList();
             }
         });
@@ -192,7 +195,6 @@ export default defineComponent({
         const selectName = (result: any) => {
             checkInData.value = result.full_name_th;
             audienceId.value = result.id;
-
             filteredAudienceList.value = [];
         };
 
