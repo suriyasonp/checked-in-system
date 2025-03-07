@@ -55,3 +55,15 @@ export const registerAudience = async (form: any) => {
     throw error;
   }
 };
+
+//Post Check-in
+export const postCheckin = async (form: any) => {
+  console.log(form, 'postCheckin');
+  try {
+    const response = await axios.post(`${API_URL}/checkin`, form); // ส่งข้อมูลฟอร์มใน body
+    return response.data;
+  } catch (error) {
+    console.error('Error registering audience', error);
+    throw error;
+  }
+};
