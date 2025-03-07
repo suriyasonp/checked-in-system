@@ -5,7 +5,7 @@
                 <b>Audiences</b>
             </div>
             <q-select filled v-model="selectedEvent" :options="events" label="Select Event" emit-value map-options
-                @input="fetchAudiences" />
+                @update:model-value="fetchAudiences" />
             <q-table :rows="audiences" :columns="columns" row-key="id" :loading="loading"
                 no-data-label="No audiences available">
                 <template v-slot:top-right>

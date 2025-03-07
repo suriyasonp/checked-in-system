@@ -16,7 +16,7 @@
                 </template>
             </q-table>
 
-            <q-dialog v-model="checkInModal" persistent>
+            <q-dialog v-model="checkInModal" persistent @hide="resetDialog">
                 <q-card style="width: 700px;">
                     <q-card-section>
                         <div class="text-h6">Check-in</div>
@@ -124,6 +124,14 @@ export default defineComponent({
                 errorMessage.value = 'Failed to load events. Please try again later.';
             }
         };
+
+        const resetDialog = () => {
+            selectedCheckInEvent.value = null;
+            checkInData.value = '';
+            filteredAudienceList.value = [];
+            selectedAudience.value = null;
+            errorMessageOnDialog.value = '';
+        }
 
         const fetchCheckins = async () => {
             if (!selectedEvent.value) {
@@ -246,7 +254,8 @@ export default defineComponent({
             filterAudienceList,
             tAudienceList,
             columnsDialog,
-            selectedAudience
+            selectedAudience,
+            resetDialog
         };
     },
 });
