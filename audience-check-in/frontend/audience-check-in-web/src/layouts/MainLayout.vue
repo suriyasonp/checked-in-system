@@ -1,116 +1,144 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+  <div id="app">
+    <q-layout view="lHh lpr lFf" container style="min-height: 100vh; height: auto;" class="shadow-2 rounded-borders">
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+      <q-header bordered class="bg-grey-3 text-primary">
+        <q-toolbar>
+          <q-avatar>
+            <img src="../assets/target.png">
+          </q-avatar>
+          <q-toolbar-title class="text-center text-dark">Audience check-in system</q-toolbar-title>
+          <q-btn flat round dense icon="event" />
+        </q-toolbar>
+      </q-header>
 
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
+      <q-footer bordered class="bg-grey-3 text-primary">
+        <q-tabs no-caps active-color="primary" indicator-color="transparent" class="text-grey-8" v-model="tab">
+          <q-tab name="Check-in" label="Check-in" @click="goToHome" />
+          <q-tab name="Audiences" label="Audiences" @click="goToAudiences" />
+          <q-tab name="Register" label="Register" @click="goToRegister" />
+        </q-tabs>
+      </q-footer>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+      <q-page-container>
+        <router-view />
+      </q-page-container>
+    </q-layout>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import EssentialLink from 'components/EssentialLink.vue';
-
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
+import { defineComponent, ref, onMounted } from 'vue';
+import { getEvents, getCheckins } from '../services/api';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
-  name: 'MainLayout',
+  name: 'MainPage',
+  setup() {
+    const events = ref<any[]>([]);
+    const checkins = ref<any[]>([]);
+    const selectedEvent = ref<number | null>(null);
+    const loading = ref<boolean>(false);
+    const errorMessage = ref<string | null>(null);
 
-  components: {
-    EssentialLink
-  },
+    const tab = ref<string>("Home");
 
-  setup () {
-    const leftDrawerOpen = ref(false)
+    const columns = [
+      { name: 'order', label: '#', align: 'center', field: 'order' },
+      { name: 'full_name_th', label: 'Name', align: 'left', field: 'full_name_th' },
+      { name: 'nickname_th', label: 'Nickname', align: 'left', field: 'nick_name_th' },
+      { name: 'full_name_en', label: 'Name English', align: 'left', field: 'full_name_en' },
+      { name: 'nickname_en', label: 'Nickname English', align: 'left', field: 'nick_name_en' },
+      { name: 'organization', label: 'Organization', align: 'left', field: 'organization' },
+      { name: 'check_in_time', label: 'Check-in Time', align: 'center', field: 'check_in_time' },
+    ];
+
+    const fetchEvents = async () => {
+      try {
+        const data = await getEvents();
+        events.value = data.map((event: any) => ({
+          label: event.name,
+          value: event.id
+        }));
+      } catch (error) {
+        console.error('Error fetching events', error);
+        errorMessage.value = 'Failed to load events. Please try again later.';
+      }
+    };
+
+    const fetchCheckins = async () => {
+      if (!selectedEvent.value) {
+        return;
+      }
+
+      loading.value = true;
+      try {
+        const data = await getCheckins(selectedEvent.value);
+        checkins.value = data.map((checkin: any, index: number) => ({
+          order: index + 1,
+          ...checkin,
+          full_name_th: checkin.audience.full_name_th,
+          full_name_en: checkin.audience.full_name_en,
+          nick_name_th: checkin.audience.nick_name_th,
+          nick_name_en: checkin.audience.nick_name_en,
+          organization: checkin.audience.organization,
+          check_in_time: new Date(checkin.check_in_time).toLocaleString()
+        }));
+        errorMessage.value = null;
+      } catch (error) {
+        console.error('Error fetching check-ins', error);
+        errorMessage.value = 'Failed to load check-ins. Please try again later.';
+      } finally {
+        loading.value = false;
+      }
+    };
+    const router = useRouter();
+
+    const goToAudiences = () => {
+      router.push('/audiences');
+    };
+
+    const goToHome = () => {
+      router.push('/');
+    };
+
+    const goToRegister = () => {
+      router.push('/register');
+    };
+
+    onMounted(() => {
+      fetchEvents();
+    });
 
     return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
-    }
-  }
+      events,
+      checkins,
+      selectedEvent,
+      loading,
+      columns,
+      fetchCheckins,
+      errorMessage,
+      tab,
+      goToAudiences,
+      goToHome,
+      goToRegister
+    };
+  },
 });
 </script>
+
+<style scoped>
+#app {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.q-select,
+.q-table {
+  margin-bottom: 20px;
+}
+
+.q-banner {
+  margin-top: 20px;
+}
+</style>

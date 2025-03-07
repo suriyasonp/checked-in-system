@@ -1,1 +1,7 @@
 /* app global css */
+.btn {
+  width: 80px;
+}
+.btn-icon {
+  width: 140px;
+}
