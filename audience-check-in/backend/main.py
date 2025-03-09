@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -32,6 +33,11 @@ def create_event(event: schemas.EventCreate, db: Session = Depends(get_db)):
 @app.get("/events/", response_model=list[schemas.EventResponse])
 def get_events(db: Session = Depends(get_db)):
     return crud.get_events(db)
+
+@app.get("/events/{event_id}/audience/not-checked-in", response_model=List[schemas.AudienceResponse])
+def read_audience_not_checked_in(event_id: int, db: Session = Depends(get_db)):
+    audience = crud.get_audience_not_checked_in(db, event_id)
+    return audience
 
 # Audience Routes
 @app.post("/audience/", response_model=schemas.AudienceResponse)
