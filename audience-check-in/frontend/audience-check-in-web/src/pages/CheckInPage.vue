@@ -110,13 +110,20 @@ export default defineComponent({
             } else if (checkInData.value === '') {
                 getAudienceNotCheckedIn(selectedCheckInEvent.value);
                 filteredAudienceList.value = tAudienceList.value;
-                errorMessageOnDialog.value = null;
+                errorMessageOnDialog.value = '';
+                InfoMessageOnDialog.value = '';
             }
         };
 
         watch(checkInData, (newValue) => {
             if (newValue !== undefined) {
                 filterAudienceList();
+            }
+        });
+        watch(selectedCheckInEvent, (newValue) => {
+            if (newValue) {
+                errorMessageOnDialog.value = '';
+                InfoMessageOnDialog.value = '';
             }
         });
 
@@ -139,13 +146,13 @@ export default defineComponent({
             filteredAudienceList.value = [];
             selectedAudience.value = null;
             errorMessageOnDialog.value = '';
+            InfoMessageOnDialog.value = '';
         }
 
         const fetchCheckins = async () => {
             if (!selectedEvent.value) {
                 return;
             }
-
             loading.value = true;
             try {
                 const data = await getCheckins(selectedEvent.value);
