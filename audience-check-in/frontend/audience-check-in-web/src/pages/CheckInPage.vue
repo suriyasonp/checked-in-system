@@ -15,7 +15,6 @@
                         class="btn-icon" />
                 </template>
             </q-table>
-
             <q-dialog v-model="checkInModal" persistent @hide="resetDialog">
                 <q-card style="width: 700px;">
                     <q-card-section>
@@ -108,8 +107,7 @@ export default defineComponent({
                     audience.full_name_th.toLowerCase().includes(checkInData.value.toLowerCase())
                 );
             } else if (checkInData.value === '') {
-                getAudienceNotCheckedIn(selectedCheckInEvent.value);
-                filteredAudienceList.value = tAudienceList.value;
+                filteredAudienceList.value = [];
                 errorMessageOnDialog.value = '';
                 InfoMessageOnDialog.value = '';
             }
@@ -147,6 +145,7 @@ export default defineComponent({
             selectedAudience.value = null;
             errorMessageOnDialog.value = '';
             InfoMessageOnDialog.value = '';
+            getAudienceNotCheckedIn(selectedCheckInEvent.value);
         }
 
         const fetchCheckins = async () => {
