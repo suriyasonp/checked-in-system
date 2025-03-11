@@ -53,7 +53,18 @@
                     </q-card-actions>
                 </q-card>
             </q-dialog>
-
+            <q-dialog v-model="checkInSuccessDialog">
+                <q-card>
+                    <q-card-section class="text-center">
+                        <q-icon name="check_circle" size="100px" color="green" />
+                        <div class="text-h6">Check-in Successful</div>
+                    </q-card-section>
+                    <q-card-actions align="right">
+                        <q-btn flat label="OK"
+                            @click="checkInSuccessDialog = false; checkInModal = false; fetchCheckins();" />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
             <q-banner v-if="errorMessage" class="bg-negative text-white">
                 <q-icon name="error" size="xs" />
                 {{ errorMessage }}
@@ -79,6 +90,7 @@ export default defineComponent({
         const errorMessageOnDialog = ref<string | null>(null);
         const InfoMessageOnDialog = ref<string | null>(null)
         const checkInModal = ref<boolean>(false);
+        const checkInSuccessDialog = ref<boolean>(false);
         const checkInData = ref<string>('');
         const searchResults = ref<any[]>([]);
         const tAudienceList = ref<any[]>([]);
@@ -230,8 +242,7 @@ export default defineComponent({
                         event_id: selectedCheckInEvent.value
                     };
                     await postCheckin(requestBody);
-                    checkInModal.value = false;
-                    fetchCheckins();
+                    showSuccessDialog(); // Show the success dialog
                 }
             } catch (error) {
                 console.error('Error performing check-in', error);
@@ -239,6 +250,9 @@ export default defineComponent({
             }
         };
 
+        const showSuccessDialog = () => {
+            checkInSuccessDialog.value = true; // Assuming checkInSuccessDialog controls the visibility of the dialog
+        };
         const router = useRouter();
 
         const goToAudiences = () => {
@@ -273,7 +287,8 @@ export default defineComponent({
             columnsDialog,
             selectedAudience,
             resetDialog,
-            InfoMessageOnDialog
+            InfoMessageOnDialog,
+            checkInSuccessDialog
         };
     },
 });
