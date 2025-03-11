@@ -43,6 +43,10 @@
                             <q-icon name="error" size="xs" />
                             {{ errorMessageOnDialog }}
                         </q-banner>
+                        <q-banner v-if="InfoMessageOnDialog" class="bg-warning text-white">
+                            <q-icon name="info" size="xs" />
+                            {{ InfoMessageOnDialog }}
+                        </q-banner>
                     </q-card-section>
                     <q-card-actions align="right">
                         <q-btn flat label="Cancel" color="primary" v-close-popup />
@@ -61,7 +65,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, onMounted, watch } from 'vue';
-import { getEvents, getCheckins, postCheckin, getAudienceByEvent } from '../services/api';
+import { getEvents, getCheckins, postCheckin, getAudienceNotCheckedIn } from '../services/api';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
@@ -74,6 +78,7 @@ export default defineComponent({
         const loading = ref<boolean>(false);
         const errorMessage = ref<string | null>(null);
         const errorMessageOnDialog = ref<string | null>(null);
+        const InfoMessageOnDialog = ref<string | null>(null)
         const checkInModal = ref<boolean>(false);
         const checkInData = ref<string>('');
         const searchResults = ref<any[]>([]);
@@ -103,7 +108,7 @@ export default defineComponent({
                     audience.full_name_th.toLowerCase().includes(checkInData.value.toLowerCase())
                 );
             } else if (checkInData.value === '') {
-                getAudienceByEvent(selectedCheckInEvent.value);
+                getAudienceNotCheckedIn(selectedCheckInEvent.value);
                 filteredAudienceList.value = tAudienceList.value;
                 errorMessageOnDialog.value = null;
             }
@@ -157,7 +162,7 @@ export default defineComponent({
                 errorMessage.value = null;
             } catch (error) {
                 console.error('Error fetching check-ins', error);
-                errorMessage.value = 'Failed to load check-ins. Please try again later.';
+                InfoMessageOnDialog.value = 'Failed to load check-ins. Please try again later.';
             } finally {
                 loading.value = false;
             }
@@ -167,10 +172,14 @@ export default defineComponent({
             if (!selectedCheckInEvent.value) {
                 return;
             }
-
             try {
-                const data = await getAudienceByEvent(selectedCheckInEvent.value);
+                const data = await getAudienceNotCheckedIn(selectedCheckInEvent.value);
+                if (data.length === 0) {
+                    InfoMessageOnDialog.value = 'No audience members have yet to register for this event.';
+                    return;
+                }
                 tAudienceList.value = data;
+
                 const res = await getCheckins(selectedCheckInEvent.value);
                 checkedInAudiences.value = res.map((checkin: any, index: number) => ({
                     order: index + 1,
@@ -257,7 +266,8 @@ export default defineComponent({
             tAudienceList,
             columnsDialog,
             selectedAudience,
-            resetDialog
+            resetDialog,
+            InfoMessageOnDialog
         };
     },
 });
