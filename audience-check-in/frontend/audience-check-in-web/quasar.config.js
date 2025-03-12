@@ -171,34 +171,50 @@ module.exports = configure(function (/* ctx */) {
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-electron-apps/configuring-electron
+    // electron: {
+    //   // extendElectronMainConf (esbuildConf)
+    //   // extendElectronPreloadConf (esbuildConf)
+
+    //   inspectPort: 5858,
+
+    //   bundler: 'packager', // 'packager' or 'builder'
+
+    //   packager: {
+    //     // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
+
+    //     // OS X / Mac App Store
+    //     // appBundleId: '',
+    //     // appCategoryType: '',
+    //     // osxSign: '',
+    //     // protocol: 'myapp://path',
+
+    //     // Windows only
+    //     // win32metadata: { ... }
+    //   },
+
+    //   builder: {
+    //     // https://www.electron.build/configuration/configuration
+
+    //     appId: 'audience-check-in-web'
+    //   }
+    // },
     electron: {
-      // extendElectronMainConf (esbuildConf)
-      // extendElectronPreloadConf (esbuildConf)
-
-      inspectPort: 5858,
-
-      bundler: 'packager', // 'packager' or 'builder'
-
+      bundler: 'packager', // หรือ 'builder' ถ้าต้องการไฟล์ติดตั้ง
       packager: {
-        // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
-
-        // OS X / Mac App Store
-        // appBundleId: '',
-        // appCategoryType: '',
-        // osxSign: '',
-        // protocol: 'myapp://path',
-
-        // Windows only
-        // win32metadata: { ... }
+        platform: 'win32', // สร้างไฟล์สำหรับ Windows
+        arch: 'x64', // หรือ 'ia32' ถ้าต้องการ 32-bit
+        icon: 'favi-icon', // ตั้งค่าไอคอน (เปลี่ยนเป็นไอคอนของคุณ)
+        asar: true, // บีบอัดโค้ดเป็นไฟล์เดียว
+        overwrite: true // เขียนทับไฟล์เดิมถ้ามีอยู่แล้ว
       },
-
       builder: {
-        // https://www.electron.build/configuration/configuration
-
-        appId: 'audience-check-in-web'
+        appId: 'com.yourapp.id',
+        win: {
+          target: 'nsis', // หรือ 'portable' ถ้าต้องการพกพาได้
+          icon: 'src-electron/icons/icon.ico'
+        }
       }
     },
-
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
     bex: {
       contentScripts: [

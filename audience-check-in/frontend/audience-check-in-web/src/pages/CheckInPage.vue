@@ -241,8 +241,10 @@ export default defineComponent({
                         audience_id: audienceId.value,
                         event_id: selectedCheckInEvent.value
                     };
-                    await postCheckin(requestBody);
-                    showSuccessDialog(); // Show the success dialog
+                    const res = await postCheckin(requestBody);
+                    if (res) {
+                        showSuccessDialog(); // Show the success dialog
+                    }
                 }
             } catch (error) {
                 console.error('Error performing check-in', error);
