@@ -24,12 +24,25 @@ export const getCheckins = async (eventId: number) => {
   }
 };
 
-export const getAudienceByEvent = async (eventId: number|null) => {
+export const getAudienceByEvent = async (eventId: number | null) => {
   try {
     const response = await axios.get(`${API_URL}/audience/event/${eventId}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching audience by event', error);
+    throw error;
+  }
+};
+
+// Get audience not checked in by event ID
+export const getAudienceNotCheckedIn = async (eventId: number|null) => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/events/${eventId}/audience/not-checked-in`
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error audience not checked in', error);
     throw error;
   }
 };
@@ -58,7 +71,6 @@ export const registerAudience = async (form: any) => {
 
 //Post Check-in
 export const postCheckin = async (form: any) => {
-  console.log(form, 'postCheckin');
   try {
     const response = await axios.post(`${API_URL}/checkin`, form); // ส่งข้อมูลฟอร์มใน body
     return response.data;

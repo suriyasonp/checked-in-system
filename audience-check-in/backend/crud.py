@@ -31,7 +31,7 @@ def get_audience_by_fullname(db: Session, full_name: str):
 
 def get_audience_not_checked_in(db: Session, event_id: int):
     subquery = db.query(models.CheckIn.audience_id).filter(models.CheckIn.event_id == event_id).subquery()
-    return db.query(models.Audience).filter(~models.Audience.id.in_(subquery)).all()
+    return db.query(models.Audience).filter(~models.Audience.id.in_(subquery), models.Audience.event_id == event_id).all()
 
 # CheckIn CRUD
 def create_checkin(db: Session, checkin: schemas.CheckInCreate):
